@@ -1,0 +1,119 @@
+#include<iostream>
+#include<fstream>
+
+using namespace std;
+int wygrana_innych(string mecz)
+{
+	int ile=0;
+	string pop_znak="B";
+	string znak="";
+	for(int i=0;i<mecz.length();i++)
+	{
+		znak=mecz[i];
+		if(znak!=pop_znak)
+		{
+			ile++;
+			pop_znak=znak;
+		}
+	}
+	cout<<ile<<endl;
+	return ile;
+}
+int set(string mecz){
+	fstream plik2;
+	plik2.open("wyniki1.txt",ios::out | ios::app);
+	int seta=0;
+	int setb=0;
+	string pop_znak="B";
+	string znak="";
+	for(int i=0;i<mecz.length();i++)
+	{
+		znak=mecz[i];
+			if(znak!=pop_znak)
+			{
+				pop_znak=znak;
+			}
+			if(znak==pop_znak)
+			{
+				if(znak=="B")
+				{
+					setb++;
+				}
+				if(znak=="A")
+				{
+					seta++;
+				}
+			}
+			if(seta>=1000 && seta-3>=setb)
+			{
+				break;
+			}
+			else if(setb>=1000 && setb-3>=seta)
+			{
+				break;
+			}
+
+	}
+	if(seta>setb)
+	{
+		plik2<<"A "<<seta<<":"<<setb;
+	}
+	else if(setb>seta)
+	{
+		plik2<<"B "<<seta<<":"<<setb;
+	}
+	plik2.close();
+}
+int dobra_passa(string mecz)
+{
+	int passa=0;
+	int dlugosc=0;
+	int ile=0;
+	string kto="";
+	string pop_znak="B";
+	string znak="";
+	for(int i=0;i<mecz.length();i++)
+	{
+		znak=mecz[i];
+		if(znak!=pop_znak)
+		{
+			pop_znak=znak;
+			ile=0;
+		}
+		if(znak==pop_znak)
+		{
+			ile++;
+			if(ile==10)
+			{
+				passa++;
+			}
+			if(ile>10)
+			{
+				if(ile>dlugosc)
+				{
+					kto=znak[i];
+					dlugosc=ile;
+				}
+			}
+		}
+	}
+	cout<<passa<<endl;
+	cout<<kto<<endl;
+	cout<<dlugosc;
+}
+
+int main(){
+	fstream plik;
+	fstream plik2;
+	string mecz;
+	plik.open("mecz.txt",ios::in);
+	plik2.open("wyniki1.txt",ios::out);
+	while(plik>>mecz)
+	{
+		plik2<<wygrana_innych(mecz)<<endl;
+		set(mecz);
+		dobra_passa(mecz);
+	}
+	plik.close();
+	plik2.close();
+}
